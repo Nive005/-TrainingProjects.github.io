@@ -1,0 +1,637 @@
+alter table sample1 drop constraint employe_chk_salary; --> to drop a constraint
+alter table smaple1 add constraint emplyee_ck_salry check(price>2000) -->to add a contraint
+alter table sample1 add column (designation varchar(20));-->to add column
+alter table sample1 modify column designation varchar(20) default'EMP'; --> to modify
+alter tale sample1 drop column designation; -->to drpo a coulmn
+alter table sample add column(dept varchar(20)) unique; -->to add a column with constraint
+
+ 1) create table Rooms (rid int ,roomtype varchar(20),price numeric(8,2),constraint PK_RID primary key(rid),constraint CHK_PR check(price>1000));
+
+2) alter table Author add constraint UQ_AName UNIQUE(author_name);
+
+3)create table sample(id int,price numeric(10,2) DEFAULT 100,pname varchar(20) DEFAULT 'UnKnown');
+
+create table department(did int primary key,dname varchar(20));
+
+mysql> insert into department values(1,"IT");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into department values(2,"CSE");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into department values(3,"ECE");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into department values(4,"EEE");
+Query OK, 1 row affected (0.07 sec)\
+
+mysql> create table employee (eid int primary key,ename varchar(20),did varchar(20) foreign key reference department(did)
+
+4) create table employee (eid int primary key,ename varchar(20),did int ,foreign key(did) references department(did));
+mysql> drop table employee;
+create table employee (eid int primary key,ename varchar(20),did int references department(did)on delete cascade);
+
+
+5)mysql> insert into student values(5,"ria",5);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`demo`.`student`, CONSTRAINT `FK_STUD` FOREIGN KEY (`did`) REFERENCES `department` (`did`))
+
+6)mysql> delete from department where did=4;//we can not delete when child have the value of parent
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`demo`.`student`, CONSTRAINT `FK_STUD` FOREIGN KEY (`did`) REFERENCES `department` (`did`))
+mysql>
+
+7)insert into department values(5,"Mech");
+delete from department where did=5;//we can delete this when child doesnot have this department 
+
+8)mysql> drop table student;
+
+9) create table employee (eid int primary key,ename varchar(20),did int default 1 ,constraint FK_DID foreign key(did) references department(did)on delete set null);
+
+10)create table employee (eid int primary key,ename varchar(20),did int default 1 ,constraint FK_DID foreign key(did) references department(did)on delete set null on update cascade);
+
+mysql> update department set did=11 where dname="IT";
+
+
+
+----------------------------
+SOLID PRINCIPLES IN JAVA
+----------------------------
+
+
+Select*from regions join countries on regions.region_id=countries.region_id;
+
+Select*from  countries join regions on regions.region_id=countries.region_id;
+
+
+1)Display the country name along with their region name
+-->select country_name ,region_name from countries c join regions r on r.region_id=c.region_id;
+
+2)display employee firstname,latsname,department name
+--> select first_name,last_name,department_name  from departments d join employees e on d.department_id=e.department_id;
+
+3)display firstname.lastname,department for emloyees from IT department
+-->select first_name,last_name,department_name  from departments d join employees e on d.department_id=e.department_id where department_name="IT";
+
+4)display firstname.lastname,salary ,departmnet_name for emloyees who get a salary greater than or equal to 10k
+-->select first_name,last_name,department_name ,salary from departments d join employees e on d.department_id=e.department_id where e.salary>=10000;
+
+5)select count(*) from employees where salary>=10000;
+
+6)display employee first name,department name,city,countryy and region 
+select first_name,department_name,city,country_name ,region_name from employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id join countries c on l.country_id=c.country_id join regions r on c.region_id=r.region_id;
+
+7)1054 (42S22): Unknown column 'd.department' in 'on clause'
+mysql> select first_name ,department_name ,city from employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id where department_name in('FINANCE','SALES');
+
+
+
+select e.ename,d.did,d.dname from employee e inner join department d on e.did=d.did;
+//inner join gets only the common 
+
+select e.ename,d.did,d.dname from employee e left join department d on e.did=d.did;-->unmatched rows
+
+select e.ename,d.did,d.dname from department d left join  employee e on e.did=d.did;
+
+
+------------
+SELF JOIN
+------------
+
+1)display the employee first name along with the manager first name,manager last_name
+
+-->select e.first_name,e.employee_id ,m.first_name,m.last_name from employees e join employees m where e.manager_id=m.employee_id;
+
+2)display the employee first name along with the manager first name,manager last_name along with who dont have manager
+select e.first_name,e.employee_id ,m.first_name,m.last_name from employees e left join employees m on e.manager_id=m.employee_id ;
+
+subquery
+----------
+3)find the names of employees who gets max salary
+--> select e.first_name, e.salary from employees e where salary=(select max(salary) from employees);
+
+mysql> select e.first_name, e.salary from employees e where salary>(select avg(salary) from employees);
+
+4) select e.first_name, e.salary,d.department_name from employees e join departments d on e.department_id=d.department_id  where salary>(select avg(salary) from employees);
+
+5)select e.first_name, e.salary,d.department_name from employees e join departments d on e.department_id=d.department_id  where salary>(select avg(salary) from employees) and d.department_name='SALES';
+
+
+GROUP BY
+
+MAXIMUM SLARY OBTAINED AVG SLARY WITH EACH DEPARTMENT
+
+ select department_id, avg(salary) from employees group by department_id;
+        --------------                                      -------------
+
+-->display the highest salary with each cities
+
+having condition
+
+------------------------------
+Function and stored procedures
+------------------------------
+
+select len('   hello   ');
+
+select len(trim('  Hello'));
+
+select SUBSTRING('wELCOME',1,4); 
+
+SELECT upper(first_name) ,last_name from employees;
+
+select concat(first_name,last_name) from employees;
+
+select concat(first_name,'.',last_name) FULLNAME from employees;
+
+SELECT ROUND(SALARY+(SALARY*0.12),2) INCREMENTEDSALARY FROM EMPLOYEES;
+
+SELECT (SALARY+(SALARY*0.12)) INCREMENTEDSALARY FROM EMPLOYEES;
+
+SELECT ROUND(1234.5678,2);
+
+SELECT CEILING(1234.5678);
+
+SELECT POWER(2,2);
+
+select GETDATE();
+
+select DATEDIFF(month,'2008-10-01',getdate());
+
+select first_name ,DATEDIFF(year,hire_date,getdate()) as 'years_of_expereince' from employees;
+
+select DATEADD(day,7,GETDATE()) 'date of return';
+
+select DATEPART(year,getdate()),DATEPART(weekday,getdate());
+
+select DATEPART(month,getdate()),DATEPART(weekday,getdate()),DATEPART(day,getdate()),DATEPART(year,getdate());
+
+select first_name,email,phone_number ,salary ,hire_date into employee_details from employees;
+
+select first_name,email,phone_number ,salary ,hire_date into employee_details from employees;
+
+alter table employee_details alter column email varchar(40) null;
+
+update employee_details set email=null where first_name='shelley';
+
+update employee_details set email=null where first_name='william';
+
+select isnull(email,phone_number)  from employee_details;
+
+select COALESCE(email,phone_number,'not found') 'ADDRESS'  from employee_details;
+
+select cast('2023-10-12' as datetime);
+
+select convert(varchar,getdate(),102) as dateconvert;
+
+select try_parse('23 april 2020' as date) result;
+
+select try_parse('-123333,0000' as int);
+
+
+PROCEDURES
+------------
+
+
+UDF---SCALER---TABLE VALUED FUNCTION
+
+
+1)CREATE FUNCTION dbo.AddNumbers
+( 
+  @NUM1 INT,
+  @NUM2 INT
+) 
+RETURNS INT
+AS
+BEGIN
+    declare @total int
+	set @total=@num1+@num2
+	return @total
+end;
+---declare a varuable
+---call the addnumbers function
+declare @result int
+set @result=dbo.AddNumbers(5,7)
+select @result
+
+
+2)create function sum_of_salary_dept(@dept_id int)
+returns decimal(16,2)
+begin 
+declare @sumx dec(16,2)
+select @sumx=sum(salary) from employees where department_id=@dept_id
+return @sumx
+end
+go
+
+select dbo.sum_of_salary_dept(3)
+
+
+--->display all the employee name who work in a given project
+select e.first_name from employees e where 'p2' in (select project_no from works_on w where w.EMP_NO=e.employee_id);
+
+3)create procedure DEpartmentCountryRegion
+@department_id int
+as
+BEGIN
+select d.department_id,d.department_name,c.country_name,r.region_name
+from departments d
+join locations l on l.location_id =d.location_id
+join countries c on c.country_id=l.country_id
+join regions r on r.region_id=c.region_id
+where d.department_id=@department_id
+END
+GO
+
+exec DEpartmentCountryRegion 7
+
+4)create procedure increase_budget(@percent int,@pr_no char(4))
+as 
+
+update project set budget=budget+(budget*@percent/100) where PROJECT_NO=@pr_no
+go
+exec increase_budget @percent=2,@pr_no='P3'
+
+select*from project;
+
+
+create procedure increase_budget6
+as 
+update project set budget=budget+(budget*5/100) where budget>(select avg(budget) from project);
+
+exec increase_budget6
+select*from project;
+
+create view emp_departments as select e.first_name,e.last_name,d.department_name from employees e join departments d on e.department_id=d.department_id;
+
+go 
+select*from emp_departments;
+
+go
+create view v_clerk as select emp_no,project_no,enter_date from works_on where job='clerk';
+
+go
+ create view v_project_p2 as select emp_no from v_clerk where project_no='p2';
+
+
+1)--Create a stored Procedure to  insert a  new record in the region table .
+create procedure insert_to_regions1 @reg_id int ,@reg_name varchar(20)
+as 
+insert into regions values(@reg_id,@reg_name) --where region_id=@reg_id and region_name=@reg_name
+ exec insert_to_regions1 8, 'asia'
+ select*from regions
+ select*from regions;
+
+
+2) -->Create a stored Procedure that takes the employee id as input parameter and displays the employee name, along with the email or 
+ --ephone(which ever is available) as ‘contact Details’   .If no contact information is available display ‘Not Available’ . 
+
+ select*from employees;
+ create procedure employee1 (@emp_id int)
+ as
+ select first_name, coalesce(email,phone_number,'NOT APPLICABLE') as 'contact_dtails' from employees where employee_id=@emp_id
+
+ exec employee1 100
+
+3)--Create a stored procedure named GetEmployeesInDepartment that takes a department name as input and 
+ --returns the list of employees in that department, with the following information : first name, last name ,department name , job titles and salaries.
+ create procedure GetEmployeesInDepartment1 @dept_name varchar(20)
+ as 
+ select e.first_name,e.last_name,d.department_name,j.job_title,e.salary from  departments d join employees e on d.department_id=e.department_id join jobs j on e.job_id=j.job_id  WHERE department_name=@dept_name
+
+ exec GetEmployeesInDepartment1 'FINANCE'
+
+
+4) --Create a stored procedure named GetDependentCountByEmployee that takes an employee ID as input and returns the count of dependents for that employee.
+
+ create procedure GetDependentCountByEmployee
+ @emp_id int
+ as
+ select count(dependent_id ) from dependents d join employees e on d.employee_id=e.employee_id where e.employee_id= @emp_id
+
+ exec GetDependentCountByEmployee 106
+
+5)--Create a stored procedure named GetTotalSalariesByDepartment that calculates and returns the total salaries of all employees in each department.
+
+ create procedure GetTotalSalarieByDepartment1
+ as
+ select sum(salary),d.department_id from employees e join departments d on e.department_id=d.department_id group by d.department_id
+
+ exec GetTotalSalarieByDepartment1
+
+6)
+ --Create a stored procedure named GetEmployeeDetailsWithManager that takes an employee ID as input and returns all the details 
+ --of that employee along with their manager's name.
+
+ create procedure GetEmployeeDetailsWithManager1 @emp_id int
+ as
+ select e.*,m.first_name as manager_name from employees e join employees m on e.manager_id=m.employee_id where e.employee_id=@emp_id
+
+ exec GetEmployeeDetailsWithManager1 110
+7)--Create a stored procedure named GetEmployeeDetailsWithManager that takes an employee ID as input and returns all the details 
+ --of that employee along with their manager's name.
+
+ create procedure GetEmployeeDetailsWithManager1 @emp_id int
+ as
+ select e.*,m.first_name as manager_name from employees e join employees m on e.manager_id=m.employee_id where e.employee_id=@emp_id
+
+ exec GetEmployeeDetailsWithManager1 110
+
+8)-- Create a stored procedure named GetLocationWithMostEmployees that identifies the location (city) with the most employees 
+--and returns the location name and the number of employees.
+drop procedure GetLocationWithMostEmployees3
+
+create procedure GetLocationWithMostEmployees3
+as
+select Top 1 l.city,count(employee_id)as count_of_employees from employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=l.location_id group by city order by count_of_employees desc 
+
+exec GetLocationWithMostEmployees3
+-----------------
+in-out parameter
+-----------------
+9)create procedure calculate_total_salary
+@department_id int,
+@total_salary decimal(8,2) out
+as
+begin
+select @total_salary=sum(salary)
+from employees
+where department_id=@department_id
+end
+
+declare @total decimal(8,2)
+declare @department int=1
+exec calculate_total_salary @department,@total output
+print @total
+
+10)create procedure update_salary
+@employee_id int,
+@percentage float ,
+@incremented_salary float output
+as
+begin
+update employees set @incremented_salary=salary+(salary*@percentage/100) where employee_id=@employee_id
+end
+declare @emp_id int=101
+declare @percent float=20
+declare @inr float
+exec update_salary @emp_id,@percent,@inr out
+print @inr
+
+11)create function employee_names()
+
+RETURNS @employees_table table(employee_id int,first_name varchar(20),last_name varchar(20))
+AS
+BEGIN
+insert into @employees_table
+select e.employee_id,e.first_name,e.last_name from employees e join dependents d on e.employee_id=d.employee_id;
+RETURN 
+END
+
+select*from employee_names();
+
+12)--->when we want unique values
+create function employee_names1()
+
+RETURNS @employees_table table(employee_id int,first_name varchar(20),last_name varchar(20))
+AS
+BEGIN
+insert into @employees_table
+select distinct e.employee_id,e.first_name,e.last_name from employees e join dependents d on e.employee_id=d.employee_id;
+RETURN 
+END
+
+select*from employee_names1();
+
+insert into dependents values(31,'Alice','King','child',100)
+
+
+-----------------
+Index
+-----------------
+
+1)clustered
+2)Non-clustered
+review- desc
+
+----------------
+partitioning
+---------------
+
+its with the internal structure
+----------
+identity-->cannot give values for identity explicitly,only one identifier for one table
+-----------
+create table stu(sid int primary key identity,sname varchar(20));
+insert into stu(sname) values('alice')
+select*from stu;
+
+
+
+1)--Count the number of employees in a specific job title:
+create function no_of_employees2(@job_id int)
+returns  int
+as
+begin
+declare @count int
+select @count=count(employee_id)  from employees e join jobs j on e.job_id=j.job_id  group by job_title 
+
+return @count
+end 
+
+select dbo.no_of_employees2(2)
+
+create function highest_no_of_emp4()
+returns varchar(20)
+as 
+begin
+declare @dept_name varchar(20)
+select @dept_name = department_name from departments where  department_id in 
+(select TOP 1 department_id from employees e group by department_id order by count(department_id)desc) 
+return @dept_name
+end
+select dbo.highest_no_of_emp4()
+
+
+--Count the number of employees in a specific job title:
+--Get the department with the highest number of employees:
+--Calculate the total salary expense for a department:
+
+create function number_of_employees1(@job_title varchar(20))
+returns varchar(20)
+begin 
+declare @count int
+select @count=count(employee_id) from employees e join jobs j on e.job_id=j.job_id  where job_title=@job_title
+return @count
+end
+ 
+
+ select dbo.number_of_employees1('President')
+
+ create function highest_no_employees()
+ returns varchar(20)
+ as
+ begin
+ declare @result varchar(20)
+ select @result= d.department_name from employees e join departments d on e.department_id=d.department_id group by d.department_name order by count(employee_id) desc offset 0 rows fetch next 1 rows only
+ return @result
+ end 
+
+ select dbo.highest_no_employees()
+
+ --Calculate the total salary expense for a department:
+
+
+ create function total_salary_expense(@dept_id int)
+ returns decimal(8,2)
+ as
+ begin
+ declare @total_sal decimal(8,2)
+ select @total_sal= sum(salary) from employees where department_id=@dept_id group by department_id
+ return @total_sal
+ end
+
+ select dbo.total_salary_expense(1)
+
+ create function total_salary_expense3()
+ returns @expense_table table(department_id int,salary decimal(8,2))
+ as
+ begin 
+ insert into @expense_table
+ select department_id ,sum(salary) from employees group by department_id
+ return 
+ end
+  select *from total_salary_expense3()
+
+ 1) Get full details of all employees whose department is located in Dallas.
+
+--->select e.* from employees e join departments d on e.department_id=d.department_id join locations l on d.location_id=d.location_id where l.city='dallas'
+
+2)Write a query to calculate the difference between the maximum and minimum salary in the employees table.
+
+-->select max(salary)- min(salary) difference from employees group by department_id
+
+3)Find the average salary of employees hired in the last 6 months of the year 1997, 
+
+-->select avg(salary) from employees where hire_date>=('1997-07-01 ')and hire_date<=('1997-12-30')
+
+4)Write a query to retrieve the country names along with the first three characters of each country name in uppercase.
+
+-->select upper(substring(country_name,1,3)) from countries 
+
+5)Write a query to find the department names that have the word "Sales" in them (case-insensitive).
+
+--> select department_name from departments where department_name like '%ing%'
+
+6)Write a query to retrieve the email addresses of employees, truncating the domain part and displaying only the username (characters before the "@").
+ 
+-->select left(email,charindex('@',email)-1) from employees
+
+
+7)Write a query to retrieve all employees who were hired on or after January 1, 1998.
+
+select * from employees where hire_date>='01-01-1998'
+
+8)Write a query to find the number of employees hired in each year, and display the year along with the count.
+select count(employee_id), datepart(year,hire_date) from employees group by datepart(year,hire_date)
+
+9)Write a query to calculate the total number of days each employee has been working in the company. Consider the current date as the reference date.
+
+select datediff(year,hire_date,getdate()) ,employee_id from employees 
+
+
+10)Write a query to retrieve the hire date and the day of the week (e.g., Monday, Tuesday, etc.) on which each employee was hired.
+
+select datename(weekday,hire_date),employee_id,hire_date  from employees
+
+11)Write a query to find the employees who have been with the company for more than 5 years. Display their employee_id, first_name, last_name, and hire_date.
+select employee_id,first_name ,last_name,hire_date from employees where datediff(year,hire_date,getdate())>5
+
+12)Write a query to find the average years experience of employees in the company. 
+Assume the current date as the reference date, and consider the hire date of each employee to calculate their  years experience.
+
+select avg(datediff(year,hire_date,getdate())) from employees 
+
+
+13)Find the department name, manager name, and their hire date for all departments:
+ select d.department_name,m.first_name,m.hire_date from employees e join employees m on e.manager_id=m.employee_id join departments d on  m.department_id=d.department_id group by d.department_id
+
+ 14)Find the department name and the number of employees in each department:
+
+ select d.department_name ,count(e.employee_id) from employees e join departments d on e.department_id=d.department_id group by d.department_name
+
+ 15)Find all employees who are not managers (do not have employees reporting to them)
+
+ select * from employees e  where e.employee_id not in (select distinct m.manager_id from employees m where m.manager_id is not null)
+
+
+select *from work_order
+select*from meeting
+create procedure show_details1(@cur_status varchar(20))
+as 
+begin 
+
+select citizen_id ,c.c_first_name ,address,meeting_id,grant_amount from citizen c, meeting m ,work_order w ,granted_order g where c.citizen_id=m.citi_id and m.meeting_id=w.meetingid and w.wo_number=g.wonumber and wo_current_status= @cur_status
+end
+exec show_details1 'approved'
+
+create procedure polititcian_with_no_meeting
+as
+begin
+select politician_id from politician where politician_id not in (select p.politician_id  from politician p ,meeting m where p.politician_id=m.poli_id )
+end
+
+exec polititcian_with_no_meeting
+
+create procedure show_meetings( @address varchar(20))
+as 
+begin
+select meeting_id from meeting m ,citizen c where c.citizen_id=m.citi_id and address=@address
+end
+exec show_meetings 'mumbai'
+
+create function reason_of_meeting(@reason varchar(20))
+returns @issuetbl table(first_name varchar(20),p_name varchar(20), m_date date)
+as
+begin
+insert into @issuetbl
+select c.c_first_name,p.first_name,m.meeting_date from citizen c,politician p,meeting m where c.citizen_id=m.citi_id and p.politician_id=m.poli_id and meeting_issue=@reason
+return
+end
+
+select* from reason_of_meeting( 'water issues')
+
+
+
+select*from meeting
+
+create function num_of_meeting1(@politician_name varchar(20))
+returns  int
+as
+begin
+declare @count int
+select @count= count(meeting_id) from meeting m,politician p where p.politician_id=m.poli_id and p.first_name= @politician_name
+return @count
+end
+
+select dbo.num_of_meeting1( 'a1')
+
+select c.c_first_name,c.address,g.grant_id,g.grant_mode_type,m.meeting_date from citizen c ,meeting m , granted_order g ,work_order w where c.citizen_id=m.citi_id and m.meeting_id=w.meetingid and w.wo_number=g.wonumber and g.grant_mode_type='check'
+
+select concat(first_name,' ',last_name),count(meeting_id)  from politician p ,meeting m where p.politician_id=m.poli_id  group by politician_id,first_name,last_name order by count(meeting_id) asc
+
+select count(citizen_id ),p.politician_id from citizen c ,politician p ,meeting m where c.citizen_id=m.citi_id and p.politician_id=m.poli_id group by politician_id, datepart(month,meeting_date)
+
+create function highest_no_employees1()
+ returns varchar(20)
+ as
+ begin
+ declare @result varchar(20)
+ select @result= d.department_name from employees e join departments d on e.department_id=d.department_id group by d.department_name order by count(employee_id) desc offset 0 rows fetch next 1 rows only
+ return @result
+ end 
+
+
+
+
+
+
+

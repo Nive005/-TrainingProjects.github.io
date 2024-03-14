@@ -1,0 +1,49 @@
+admin
+nividatabase
+nividatabase.c78w2esc0r81.eu-west-2.rds.amazonaws.com
+
+create database nividatabase;
+use nividatabase;
+
+ create table employees(
+    empid int primary key auto_increment,
+    firstname varchar(20),
+    lastname varchar(20)
+);
+
+insert into employees VALUES(1,'nivedita','mudlapur');
+insert into employees VALUES(2,'yashu','reddy');
+
+select *from employees;
+
+Lambda functions
+-----------------
+
+lambda functions are invoked by events:
+s3 buckets
+sqs
+
+
+queue
+-----
+url:https://sqs.eu-west-2.amazonaws.com/106129732153/queuenivi
+arn:aws:sqs:eu-west-2:106129732153:queuenivi
+
+bucketnivi
+
+Elastic bean stalk
+------------------
+
+NOSQL
+------
+
+DynamoDB
+--------
+
+aws sts get-caller-identity
+
+aws dynamodb list-tables --output yaml
+
+Cluster
+-------
+self-heal

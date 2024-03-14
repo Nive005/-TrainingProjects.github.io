@@ -1,0 +1,44 @@
+--Create a stored Procedure to  insert a  new record in the region table .
+Go
+create procedure insert_to_regions1 @reg_id int ,@reg_name varchar(20)
+as 
+insert into regions values(@reg_id,@reg_name) --where region_id=@reg_id and region_name=@reg_name
+ exec insert_to_regions1 9, 'pacific'
+ select*from regions
+
+ select*from regions;
+ -->Create a stored Procedure that takes the employee id as input parameter and displays the employee name, along with the email or 
+ --ephone(which ever is available) as ‘contact Details’   .If no contact information is available display ‘Not Available’ . 
+
+ select*from employees;
+ create procedure employee1 (@emp_id int)
+ as
+ select first_name, coalesce(email,phone_number,'NOT APPLICABLE') as 'contact_dtails' from employees where employee_id=@emp_id
+
+ exec employee1 100
+ update employees set  email = null
+ --Create a stored procedure named GetEmployeesInDepartment that takes a department name as input and 
+ --returns the list of employees in that department, with the following information : first name, last name ,department name , job titles and salaries.
+ create procedure GetEmployeesInDepartment1 @dept_name varchar(20)
+ as 
+ select e.first_name,e.last_name,d.department_name,j.job_title,e.salary from  departments d join employees e on d.department_id=e.department_id join jobs j on e.job_id=j.job_id  WHERE department_name=@dept_name
+
+ exec GetEmployeesInDepartment1 'IT'
+
+ --Create a stored procedure named GetDependentCountByEmployee that takes an employee ID as input and returns the count of dependents for that employee.
+
+ create procedure GetDependentCountByEmployee
+ @emp_id int
+ as
+ select count(dependent_id ) from dependents d join employees e on d.employee_id=e.employee_id where e.employee_id= @emp_id
+
+ exec GetDependentCountByEmployee 106
+
+ --Create a stored procedure named GetTotalSalariesByDepartment that calculates and returns the total salaries of all employees in each department.
+
+ create procedure GetTotalSalarieByDepartment1
+ as
+ select sum(salary),d.department_id from employees e join departments d on e.department_id=d.department_id group by d.department_id
+
+ exec GetTotalSalarieByDepartment1
+

@@ -1,0 +1,186 @@
+create table doctor (doctor_id varchar(6) primary key,dr_first_name varchar(15) ,dr_middle_name varchar(15),dr_last_name  varchar(15) )
+
+create table patient(patient_id varchar(6) primary key,p_first_name varchar(15),p_middle_name varchar(15),p_last_name varchar(15), address varchar(15),city varchar(15),contact_number varchar(10),p_age int)
+
+create table appointment(app_number varchar(6)primary key,app_date date,app_time varchar(8),app_reasson varchar(30),doctor_id varchar(6) references doctor(doctor_id) ,patient_id varchar(6) references patient(patient_id))
+drop table appointment
+create table bill (bill_number varchar(20) primary key, bill_date date,bill_status varchar(8),bill_amount decimal(7,2),app_number varchar(6) references appointment(app_number))
+create table payment(payment_id varchar(6) primary key ,pay_date date,pay_mode varchar(20),pay_amount decimal(7,2),bill_number varchar(20) references bill(bill_number))
+
+
+insert into doctor values ('D1','Nancy','jennifer','john')
+insert into doctor values ('D2' ,'ram','charan','chiran')
+insert into doctor values ('D3','keerthi','chaudary','taluri')
+insert into doctor values ('D4' ,'yashu','wini','reddy')
+insert into doctor values ('D5','varsha','reddy','maratha')
+
+select*from doctor
+
+insert into patient values('P1','steva',null,'william','gandhinagar','ballari',8687675554,23)
+insert into patient values('P2','john',null,'scena','basavangudi','bangalore',9889796866,24)
+insert into patient values('P3','smith',null,'marker','btmlayout','bangalore',6464858586,30)
+insert into patient values('P4','likitha',null,'yadav','snpete','chennai',7887665431,20)
+insert into patient values('P5','chaitra','sanju','sahukar','mukunda3rdcross','pune',7887665431,28)
+insert into patient values('P6','nithu',null,'sagi','basweshwarnagar','ballari',788767755,34)
+insert into patient values('P7','alekya',null,'chaudary','vidyanagar','bangalore',6768755433,42)
+insert into patient values('P8','chaitinaya',null,'reddy','vijayangara','pune',9889786543,50)
+
+
+insert into appointment values('A1','2023-11-03','9:30 am','nasal block','D1','P1')
+insert into appointment values('A2','2023-10-31','12:30 am','heart block','D2','P2')
+insert into appointment values('A3','2022-11-30','12:30 pm','heart block','D3','P3')
+insert into appointment values('A4','2019-10-02','5:30 pm','fever','D4','P4')
+insert into appointment values('A5','2018-12-06','3:30 pm','kidney stone','D5','P5')
+
+insert into bill values('B1','2023-11-04','paid',1000,'A1')
+insert into bill values('B2','2023-10-31','notpaid',4000,'A2')
+insert into bill values('B3','2022-11-30','notpaid',9000,'A3')
+insert into bill values('B4','2019-10-02','paid',20000,'A4')
+insert into bill values('B5','2018-12-07','notpaid',7000,'A5')
+
+insert into payment values('1001','2023-11-04',null,1000,'B2')
+insert into payment values('1002','2023-10-31',null,4000,'B2')
+insert into payment values('1003','2022-11-30',null,9000,'B3')
+insert into payment values('1004','2019-10-02','online',20000,'B4')
+insert into payment values('1005','2018-12-07',null,7000,'B5')
+
+
+1)select count(a.app_number)as 'no_of_appointments',concat(d.dr_first_name,d.dr_last_name) as 'Docter name 'from doctor d,appointment a where d.doctor_id=a.doctor_id group by a.doctor_id ,concat(d.dr_first_name,d.dr_last_name)
+
+2)select avg(p.p_age)as 'patient age' from patient p,appointment a where p.patient_id=a.patient_id and datepart(year,app_date)=2023 and datename(month,app_date)='november'
+
+3)select sum(bill_amount) as 'Bill amount',p.p_first_name from patient p ,appointment a ,bill b where p.patient_id=a.patient_id and a.app_number=b.app_number group by p.p_first_name
+
+4)select p.p_first_name ,p.city ,a.app_date ,pay.pay_mode ,pay.pay_date from patient p,appointment a ,bill b,payment pay where  p.patient_id=a.patient_id and a.app_number=b.app_number and b.bill_number=pay.bill_number and pay.pay_mode='cash'
+
+5)select count(a.app_number) as'no_of_appointments', concat(d.dr_first_name,d.dr_last_name) as 'Doctor full name' from doctor d ,appointment a where d.doctor_id=a.doctor_id group by d.doctor_id , concat(d.dr_first_name,d.dr_last_name)order by count(a.app_number) desc
+select *from appointment
+
+
+1)create function appointments_for_a_specific_date7(@app_date date)
+returns @apptable table(app_number varchar(10),app_date date,app_time varchar(10),app_reasson varchar(20))
+as
+begin
+insert into @apptable
+select a.app_number,app_date,a.app_time,app_reasson from appointment a where a.app_date=@app_date
+return
+end
+
+select *from appointments_for_a_specific_date7('2023-11-03')
+
+select*from appointment
+
+2)create function total_no_of_app8(@doctor_id varchar(10))
+returns @app_details table(app_number varchar(10),app_date date ,app_time varchar(10),app_reason varchar(20),firstname varchar(20))
+as
+begin
+insert into @app_details
+select count(a.app_number) ,a.app_date,a.app_time,a.app_reasson ,p.p_first_name from appointment a ,patient p  where a.patient_id=p.patient_id and  doctor_id=@doctor_id group by a.app_date,a.app_time,a.app_reasson,p.p_first_name
+return 
+end
+
+select *from dbo.total_no_of_app8('D1')
+
+select*from appointment
+
+3)create function latest_app_date3(@doctor_id varchar(10))
+returns date
+as
+begin
+declare @date date
+select @date=max(app_date) from appointment  where doctor_id=@doctor_id
+return @date
+end
+
+select dbo.latest_app_date3('D1')
+select*from doctor
+
+4)create function total_no_of_app9(@firstname varchar(20))
+returns int
+as
+begin
+declare @count int
+select @count=count(app_number) from appointment a ,doctor d where a.doctor_id =d.doctor_id and d.dr_first_name=@firstname
+return @count
+end
+
+select dbo.total_no_of_app9('ram')
+
+
+5)create function details_of_patient6(@appreason varchar(20))
+returns @pat_doc_details table(pirst_name varchar(20),doctor_first_name varchar(20),app_date date)
+as
+begin
+insert into @pat_doc_details
+select p.p_first_name ,d.dr_first_name ,a.app_date from patient p ,doctor d ,appointment a where p.patient_id=a.patient_id and a.doctor_id=d.doctor_id and app_reasson=@appreason
+return 
+end
+
+select *from details_of_patient6('heart block')
+select*from patient
+
+1)create procedure update_phone3(@patient_id varchar(20),@phonenumber varchar(20))
+as
+begin
+if @patient_id in(select patient_id from patient)
+update patient  set contact_number=@phonenumber where patient_id=@patient_id
+else
+print'not applicable'
+end
+exec update_phone3 'p10',8687675554
+
+2)create procedure patientdetails1
+as
+begin
+select  p.patient_id ,p.p_first_name,p.address,a.app_number,b.bill_amount from patient p ,appointment a,bill b where p.patient_id=a.patient_id and a.app_number=b.app_number and b.bill_status='notpaid' group by p.patient_id,p.p_first_name,p.address,a.app_number,b.bill_amount order by a.app_number desc
+end
+exec patientdetails1
+
+3)create procedure doctor_details1
+as
+begin
+select d.doctor_id,concat(d.dr_first_name,d.dr_last_name) as 'FullName' from doctor d where d.doctor_id not in(select a.doctor_id from appointment a)order by d.doctor_id desc
+end
+
+exec doctor_details1
+
+4)create procedure patient_in_a_city1(@city varchar(20))
+as
+begin
+select concat(p.p_first_name ,p.p_last_name) ,a.app_date,concat(d.dr_first_name,d.dr_last_name) from patient p ,appointment a,doctor d where p.patient_id=a.patient_id and d.doctor_id=a.doctor_id and p.city=@city
+end
+exec patient_in_a_city1 'bangalore'
+
+
+5)create procedure total_bill3
+@patient varchar(20),
+@total_bill_amount decimal(7,2) out
+as
+begin
+select @total_bill_amount =sum(bill_amount) from patient p,appointment a ,bill b where p.patient_id=a.patient_id and a.app_number=b.app_number and p.patient_id=@patient
+print @total_bill_amount
+end
+declare @patien varchar(20)='p1'
+declare @total_bill_amoun decimal(7,2)
+exec total_bill3 @patien,@total_bill_amoun
+print @total_bill_amoun
+
+
+1)create view patient_doctor_details_view1 as select p_first_name ,p_last_name ,p_age,dr_first_name,app_date ,app_time from patient p,doctor d,appointment a where p.patient_id=a.patient_id and d.doctor_id=a.doctor_id
+select*from patient_doctor_details_view1
+
+
+2)create view patient_with_payment_details3 as select p.p_first_name,p.p_last_name,p.p_age,b.bill_amount,b.bill_date,b.bill_number,b.bill_status,pay_amount,pay_date,pay_mode,payment_id from patient p  , appointment a ,payment pay,bill b where p.patient_id=a.patient_id and a.app_number=b.app_number and pay.bill_number=b.bill_number
+select*from patient_with_payment_details3
+
+3)create view doctor_details4 as select d.doctor_id,d.dr_first_name,d.dr_last_name,a.app_date,a.app_time  from doctor d join appointment a on d.doctor_id=a.doctor_id
+select*from doctor_details4
+
+
+4)create view doctor_patient_view as select d.dr_first_name,p.p_first_name ,a.app_date ,a.app_time ,a.app_reasson from doctor d,patient p,appointment a where p.patient_id=a.patient_id and d.doctor_id=a.doctor_id 
+select*from doctor_patient_view
+
+
+5)create view patient_details_view2 as select p.patient_id,p.p_first_name,p.contact_number,p.p_age,b.bill_status from patient p , appointment a ,bill b ,payment pay where p.patient_id=a.patient_id and a.app_number=b.app_number and b.bill_number=pay.bill_number and bill_status='paid'
+
+select*from patient_details_view2

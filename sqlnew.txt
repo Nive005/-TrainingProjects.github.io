@@ -1,0 +1,314 @@
+only the column in group by is eligible in select statement
+
+use hrdb;
+
+select employee_id ,salary from employees where salary >(select avg(salary) from employees)
+
+select *from employees where salary >(select avg(salary)+3000 from employees)
+
+select floor(avg(salary)) from employees
+
+select round(123.5687682616,3) from employees
+
+select round(avg(salary),2) from employees
+
+--only the column in group by  may or may not come in select statement
+-- the column in select must be in group by statment
+
+select*from employees group by job_id
+
+select sum(salary) from employees where job_id=9
+
+select sum(salary),job_id,count(job_id) as no_emp_jobs from employees group by job_id
+
+create table customer_info(cust_id int ,cust_name varchar(20),city varchar(20));
+alter table customer_info alter column cust_id int not null
+alter table customer_info add   primary key(cust_id) 
+
+select*from customer_info
+
+insert into customer_info values(1,'jack','pune');
+insert into customer_info values(2,'jane','pune');
+insert into customer_info values(3,'jill','pune');
+insert into customer_info values(4,'amar','goa');
+insert into customer_info values(5,'akbar','goa');
+insert into customer_info values(6,'antony','goa');
+
+
+
+create table mycar(car_id int,model varchar(20));
+alter table mycar alter column car_id int not null
+alter table mycar add primary key(car_id)
+
+insert into mycar values(5,'bmw')
+insert into mycar values(6,'MERC')
+select*from mycar
+
+CREATE table mypurchase(purchaseid int,customer_id int references customer_info(cust_id),cid int references mycar(car_id),price int)
+alter table mypurchase alter column purchaseid int not null
+alter table mypurchase add  primary key(purchaseid)
+drop table mypurchase
+insert into mypurchase values(112,2,6,500000)
+insert into mypurchase values(113,2,5,700000)
+insert into mypurchase values(114,2,5,700000)
+
+
+select city,cust_id,cust_name from customer_info where  cust_id in(select count(customer_id) from mypurchase group by customer_id)
+
+select city from customer_info c join mypurchase m on c.cust_id=m.customer_id ;
+
+create table first(col1 varchar(5));
+insert into first values('y')
+
+
+create table second (col2 varchar(5))
+insert into second values('p')
+insert into second values('t')
+
+create table third(col2 varchar(5))
+insert into third values('q')
+insert into third values('r')
+insert into third values('u'),
+
+select *from first,second,third --- natural join
+             -- 1*2*3\
+	select *from customer_info,mypurchase
+	select count(*) ,city from customer_info,mypurchase,mycar where cust_id=customer_id and car_id=cid group by city
+
+	create table books(book_id int primary key ,bookname varchar(20),bookcost int,aid int)
+	drop table books
+	alter table books alter column foreign key(aid int) 
+	create table author(authorid int,authorrname varchar(20),authorcity varchar(10),bid int references books(book_id))
+
+	--inner join for matched records
+
+	select *from books b join authors a on b.book_id=a.bid;
+	select *from books b join authors a on a.author_id=b.aid;
+
+	--outer join for unmatched records
+	--matched from both and unmatched from left
+	select*from authors a left outer join books b on b.book_id=a.bid
+	--matched from both and unmatched from right
+	select*from authors a right outer join books b on b.book_id=a.bid
+
+	--matched from both and unmatched from both
+	select*from authors a full outer join books b on b.book_id=a.bid
+
+
+	---non equi join can be used for range of values
+
+create function cal_slary(@emp int)
+	returns int
+	as
+	declare net_sal=0;
+	begin
+	select sum+nvl(com,0) into net_sal from emp where empno=@emp
+	return net_sal
+	end
+	select dbo.calsal
+
+
+1)select first_name ,politician_id ,count(meeting_id) from politician p join meeting m on p.politician_id=m.poli_id group by first_name,politician_id having count(meeting_id)>1
+
+
+create function show_all_meetings(@datetosearch date)
+returns @meet_tab table(meeting_id varchar(20))
+as
+begin
+insert into @meet_tab
+select meeting_id from meeting where meeting_date=@datetosearch
+return 
+end
+select * from dbo.show_all_meetings('2023-10-10')
+
+use hrdb;
+
+select employee_id ,salary from employees where salary >(select avg(salary) from employees)
+
+select *from employees where salary >(select avg(salary)+3000 from employees)
+
+select floor(avg(salary)) from employees
+
+select round(123.5687682616,3) from employees
+
+select round(avg(salary),2) from employees
+
+--only the column in group by  may or may not come in select statement
+-- the column in select must be in group by statment
+
+select*from employees group by job_id
+
+select sum(salary) from employees where job_id=9
+
+select sum(salary),job_id,count(job_id) as no_emp_jobs from employees group by job_id
+
+create table customer_info(cust_id int ,cust_name varchar(20),city varchar(20));
+alter table customer_info alter column cust_id int not null
+alter table customer_info add   primary key(cust_id) 
+
+select*from customer_info
+
+insert into customer_info values(1,'jack','pune');
+insert into customer_info values(2,'jane','pune');
+insert into customer_info values(3,'jill','pune');
+insert into customer_info values(4,'amar','goa');
+insert into customer_info values(5,'akbar','goa');
+insert into customer_info values(6,'antony','goa');
+
+
+
+create table mycar(car_id int,model varchar(20));
+alter table mycar alter column car_id int not null
+alter table mycar add primary key(car_id)
+
+insert into mycar values(5,'bmw')
+insert into mycar values(6,'MERC')
+select*from mycar
+
+CREATE table mypurchase(purchaseid int,customer_id int references customer_info(cust_id),cid int references mycar(car_id),price int)
+alter table mypurchase alter column purchaseid int not null
+alter table mypurchase add  primary key(purchaseid)
+drop table mypurchase
+insert into mypurchase values(112,2,6,500000)
+insert into mypurchase values(113,2,5,700000)
+insert into mypurchase values(114,2,5,700000)
+
+
+select city,cust_id,cust_name from customer_info where  cust_id in(select count(customer_id) from mypurchase group by customer_id)
+
+select city from customer_info c join mypurchase m on c.cust_id=m.customer_id ;
+
+create table first(col1 varchar(5));
+insert into first values('y')
+
+
+create table second (col2 varchar(5))
+insert into second values('p')
+insert into second values('t')
+
+create table third(col2 varchar(5))
+insert into third values('q')
+insert into third values('r')
+insert into third values('u'),
+
+select *from first,second,third --- natural join
+             -- 1*2*3\
+	select *from customer_info,mypurchase
+	select count(*) ,city from customer_info,mypurchase,mycar where cust_id=customer_id and car_id=cid group by city
+
+	create table books(book_id int primary key ,bookname varchar(20),bookcost int,aid int)
+	drop table books
+	alter table books alter column foreign key(aid int) 
+	create table author(authorid int,authorrname varchar(20),authorcity varchar(10),bid int references books(book_id))
+
+	--inner join for matched records
+
+	select *from books b join authors a on b.book_id=a.bid;
+	select *from books b join authors a on a.author_id=b.aid;
+
+	--outer join for unmatched records
+	--matched from both and unmatched from left
+	select*from authors a left outer join books b on b.book_id=a.bid
+	--matched from both and unmatched from right
+	select*from authors a right outer join books b on b.book_id=a.bid
+
+	--matched from both and unmatched from both
+	select*from authors a full outer join books b on b.book_id=a.bid
+
+
+	---non equi join can be used for range of values
+
+	--avg(age) of citizens
+	--count of meetings people no of meeetings conducted by sohan 
+	-- how much amount u raised for each citizen
+	--citizen,meeting ,grant
+	--order by ,having
+
+
+	---function
+	--calculate salry
+	create function cal_slary(@emp int)
+	returns int
+	as
+	declare net_sal=0;
+	begin
+	select sum+nvl(com,0) into net_sal from emp where empno=@emp
+	return net_sal
+	end
+	select dbo.calsal
+
+create table politician (politician_id varchar(20) primary key,first_name varchar(20),middle_name varchar(20),last_name varchar(20))
+
+
+create table citizen (citizen_id varchar(20) primary key ,c_first_name varchar(20),c_middle_naame varchar(20),c_last_name varchar(20),address varchar(40),age int,mobile int)
+
+create table meeting (meeting_id varchar(20) primary key,meeting_date Date ,meeting_time time,meeting_issue varchar(20),citi_id varchar(20) references citizen(citizen_id),poli_id varchar(20) references politician(politician_id))
+
+create table work_order (wo_number varchar(20) primary key,wo_date date,wo_current_status varchar(20),wo_amount_raised int,meetingid varchar(20) references meeting(meeting_id))
+
+create table granted_order (grant_id varchar(20) primary key,grant_date date,grant_mode_type varchar(20),grant_amount int,wonumber varchar(20) references work_order(wo_number))
+
+
+insert into politician values('p1','a1','a2','a3');
+insert into politician values('p5','e1','e2','e3');
+insert into citizen values ('c5','e','jr','ntr','hyderbad',42,68698)
+delete from citizen where citizen_id='c1'
+
+insert into meeting values('m5','2023-09-11','09:01:02','electricity issue','c5','p4');
+
+insert into work_order values('w5','2023-01-12','approved',80000,'m2')
+
+insert into granted_order values('g5','2024-01-10','digital ',654500,'w5')
+select first_name ,politician_id ,count(meeting_id) from politician p join meeting m on p.politician_id=m.poli_id group by first_name,politician_id having count(meeting_id)>1
+select*from meeting
+select avg(age), c.citizen_id,meeting_date from citizen c, meeting m where c.citizen_id=m.citi_id and datepart(month,meeting_date)=10 group by c.citizen_id,m.meeting_date
+
+select sum(wo_amount_raised) from work_order
+
+select sum(wo_amount_raised) ,c.c_first_name from citizen c ,meeting m,work_order w where c.citizen_id=m.citi_id and m.meeting_id=w.meetingid group by c.c_first_name
+
+---citizen fiirst name,meeting date ,grant mode, and grant date who have got the grant by check
+---show the plotician fullname and number of meetings for each poliyicia with
+select*from meeting
+
+create function show_all_meetings(@datetosearch date)
+returns @meet_tab table(meeting_id varchar(20))
+as
+begin
+insert into @meet_tab
+select meeting_id from meeting where meeting_date=@datetosearch
+return 
+end
+select * from dbo.show_all_meetings('2023-10-10')
+
+
+--claculate total number of meetings for a given politician
+create function show_all_meetings3(@poltician_id varchar(20))
+returns @meet_tab table(meeting_id varchar(20),citizenname varchar(20))
+as
+begin
+insert into @meet_tab
+
+select count(meeting_id),c_first_name from polItician p ,meeting m,citizen c where p.politician_id=m.poli_id and  c.citizen_id=m.citi_id and politician_id=@poltician_id group by c.c_first_name  
+return 
+end
+select*from show_all_meetings3('p2')
+select*from meeting
+
+select min(meeting_date) from meeting
+
+select top(1)*from meeting order by meeting_date,meeting_time asc
+
+--enter polt
+select*from citizen
+create procedure show_citizen1(@citizenid  varchar(20),@citizephone int)
+as
+begin 
+update citizen set mobile=@citizephone where citizen_id=@citizenid
+end
+exec show_citizen1 'c1',0979778
+
+
+
+
+

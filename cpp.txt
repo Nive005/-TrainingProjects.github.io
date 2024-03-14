@@ -1,0 +1,250 @@
+// Online C++ compiler to run C++ program online
+#include <iostream> //stream 
+#include<string.h>
+using namespace std;
+int main() {
+    // Write C++ code here
+    int arr[5]={10,12,19,20,11};
+    int *p=arr;
+    cout<< "\n"<< *p;
+    p++;
+    cout<<"\n"<< *p;
+    p++;
+    cout<<"\n"<< *p;
+    p++;
+    cout<<"\n"<<*p;
+    p++;
+    cout<<"\n" << *p;
+   --------------------------- 
+    
+    // int a=10;
+    // int *k=&a;
+    // cout<< *k;
+   ------------------------------ 
+    char str[20]="kpit"; // ''\0' end of the string
+    char s1[10]={'k','p','i','t'};//wastage of memory and garbage value
+    cout<< "\n"<<str;
+    cout<< "\n"<<s1;
+-----------------------------------
+    
+    char st[20]="kpit";
+    int len=strlen(st);
+    cout<<" \n length is "<< len;
+-------------------------------------
+    
+    int size=sizeof(st);
+    cout<<" \n size of arr  "<<size;
+-------------------------------------
+    char s2[20]="kpit";
+    strcpy(st,s2);// destination,source
+    cout<< "\n"<<st;
+
+ 
+}
+-------------------------------------------
+#include<iostream.h>-->uses global namespace
+
+-->ostream class--for output
+  --cout is an object of ostream class
+  --we can use this object for output functionality
+  -- << insertion operator
+   eg: cout<<"hello";
+       cout<<"n= "<<n;
+
+-->istream class
+      --cin is an object of istream class
+      -- can use this object for input function
+      -- >> extraction operator
+   eg: int num;
+       cout<<"\n enter number ";
+       cin>>num;
+
+--------------------------------------
+    int n1,n2;
+    cout<<"\n enter 2 numbers";
+    
+    cin>>n1>>n2;
+    if(n1>n2){
+        cout<<n1<<" is max";
+    }
+    else{
+        cout<<n2<<" is max";
+    }
+
+---------------------------------------
+    for(int i=1;i<=5;i++){
+        cout<<i<<"\n ";
+    }
+----------------------------------
+ 
+ int choice=2;
+ switch(choice){
+     case 1: cout<<"\nin case1";
+             break;
+    case 2:cout<<" \nin case 2";
+           break;
+    case 3:cout<<"\nin case 3";
+    break;
+ }
+---------------------------------------
+
+-->main function is not written inside the class
+-->no accesse specifier for class
+-->deault access specifir for attributes is private
+
+------------------------------------------
+Assignement
+===========
+default constructor
+para constructor
+display
+
+main()- create one object using default constructor
+        create one object using para constructor
+        create one object using para constructor on heap memory -(using new operator)
+        display all objects
+        create array of 3 objects and display them
+        free memory
+        
+customer
+ -customerid,cname,age
+
+Account
+ - accountnumber, name,balance
+
+
+Student
+- rollno,sname,mark
+
+-------------------------
+
+this pointer
+============
+every non static member function has "this" pointer in cpp.
+static function do not have this pointer.
+static function cannot access non static member.
+
+function overloading
+====================
+return type is not considered
+multiple functions with same name but different parameters,and number of parameters.
+call of overload is ambigous ---double can be converted to lower datatype
+when can it be converted to 2 lower datatype then ambiguous error occurs.
+if it is converted to higher datatype then no data loss.
+
+---------------------------
+g++ .\client.cpp .\customer.cpp -o client.exe      
+.\client.exe
+
+---------------------------------
+
+-->"if we have para constructor then compiler will not provide default constructor"
+-->we need to provide it explicitly.
+->if we are writing new keyword inside the constructor make sure that we write destructor along with delete inside it inorder to avoid memory leakage.
+-->customer c3(c2)//copy constructor -copy one object as another -
+-->pointing to invalid pointer --dangling pointer(diagram)
+-->if we use pass by vlaue -recursive function
+
+-----------------------------------
+
+operator overloading
+====================
+operator function in a class
+left wala object should call function.
+cout<<p3<<p2 -->cascading effect.
+
+syllabus
+--------
+inheritance &ploymorphism
+exception handling
+containment
+template 
+
+----------------
+class test{
+int q,p;
+public:Test():q(0),p(0){}
+       Test(int a,int b):p(a),q(b){} //this wont work when arr[10],char str[10]
+
+
+//"destructors are always called in the reverse order"
+
+for each class one vtable is found where vfxptr is stored.
+vfptr-->(virtual function pointer)-->whenever base class function is marked as virtual
+1)virtual function pointer is added to each ibject in hierarchy.
+2)vfptr points to vftable[vftable is an array which holds addresses of virtual funs of respective class]
+3)vfptr is created per object.
+4)vfptr is initialized with base address of vftable inside constructor.
+5)vftable is created per class.
+***make only base class function as virtual****
+**we have to make base class destructor as virtaul**
+**we cannot make constructor virtual**
+
+example:if there are 10 objects created then 1 vftable is created and 10vfxptr will be created.
+
+
+**if a class contains virtual is called as polymorphic class.**
+
+derived class specific functions
+--------------------------------
+using base class pointer we cannot call these functions
+in inheritance it is always in upward direction- every salesperson is a employee (is-a relationship);
+
+-----------------------------------------------------------------------------------------
+Type casting
+============
+
+Salesperson *sp = static_cast<Salesperson *>(ep2);//it is used for basic conversion(for primitive datatypes ex:int,float )not for this.
+****dynamic cast=returns zero if casting is failed,returns address on successfull type cast*****
+****downcast - convert base class pointer to derive class pointer****
+
+
+------------------------------------------------------------------------------
+
+example:
+class simcard{
+virtual void call()=0;
+virtual void msg()=0;
+class jio:..simcard
+{
+v void call(){}
+v void msg(){}
+}
+
+class Animal
+{
+
+color,wt,ht,age,gender
+v void makesound()=0;
+v void eat()=0;
+}
+class dog{
+}
+
+class electronicdevice{
+void switchon()
+void switchoff()
+}
+class tv{
+}
+class wm
+{
+}
+
+bankcount
+savings account,current account
+
+BankAccount b3=b2// default copying;
+BankAccount b3;
+b3=b2// operator overload(assignment)s
+
+
+1)free the memory
+2)dont do it directly ,first allocate the memory and copy
+
+try temperature days(1-30) initial(7 days) if(t1==t2)
+
+
+ENUM
+-----
+internally stored as integers. but we will represent as string

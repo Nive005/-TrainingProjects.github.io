@@ -1,0 +1,21 @@
+ng g p compoundinterest
+
+transform(p:number,r:number,n:number,t:number):numbe{
+a:number;
+a=p*(Math.pow((1+r/n),n*t);
+
+arrow function
+--------------
+
+let sum=  ()=> {      //sum becomes the name or identifier to the function ,after arrow we will have body of the function
+
+}
+
+sum(10,20)
+
+1)npm install --save @angular/material@16.2.0
+2)npm install --save @angular/cdk@16.2.0
+3)npm install --save @angular/core
+4)npm install --save @angular/common
+5)npm install --save @angular/animations
+6)npm install --save hammerjs           

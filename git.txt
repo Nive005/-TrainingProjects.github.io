@@ -1,0 +1,56 @@
+creation of gitlab repository.
+kap>gitlab support>document
+
+new item>select support>raise the request
+
+
+how to create new project
+
+1)login
+2)cretae new project
+ >name of project
+
+clone
+
+htpps url
+
+create new repo
+---------------
+
+git status
+
+------------
+
+git status--to check status of modifie d ad deleted files
+git gui-
+add  controller files and commit
+push -from local system to git(master)
+
+new file>name of file> save>commit changes
+
+when working with centralized repo no need to push.
+
+pull-from centralized system to local system
+git pull origin master.
+
+
+git reset
+---------
+to revert 
+
+git log;
+git reset --hard movinglocation
+git push origin master --force(should use force when reseting)
+
+Branches
+---------
+master is default protected and private branch.
+
+2 ways to create branch
+-----------------------
+through centralized system
+from local system(terminal)
+git checkout -b preproduction
+push it
+
+merge request -from one branch to another.

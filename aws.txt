@@ -1,0 +1,82 @@
+[cloudshell-user@ip-10-2-58-67 ~]$ dir
+[cloudshell-user@ip-10-2-58-67 ~]$ aws --version
+aws-cli/2.15.4 Python/3.11.6 Linux/4.14.255-326-265.539.amzn2.x86_64 exec-env/CloudShell exe/x86_64.amzn.2023 prompt/off
+[cloudshell-user@ip-10-2-58-67 ~]$ aws sts get-caller-identity
+{
+    "UserId": "AIDARRNOTGI4W3E4ZVNKZ",
+    "Account": "106129732153",
+    "Arn": "arn:aws:iam::106129732153:user/niveditam1_genesis"
+}
+-->q for quite
+
+ubuntu@ip-10-0-1-70:~$ cd /var/www/html/
+
+ubuntu@ip-10-0-1-70:~$ cd /var/www/html/
+ubuntu@ip-10-0-1-70:/var/www/html$ exit
+
+closed.
+PS C:\Users\NIVEDITAM1\downloads> scp -i key901.pem Downloads ubuntu@18.171.172.64:/home/ubuntu
+Downloads: No such file or directory
+PS C:\Users\NIVEDITAM1\downloads> scp -i key901.pem D:\AWS ubuntu@18.171.172.64:/home/ubuntu
+D:/AWS: not a regular file
+PS C:\Users\NIVEDITAM1\downloads> scp -i key901.pem D:\AWS\index.html ubuntu@18.171.172.64:/home/ubuntu
+index.html                                                                            100%  806     4.2KB/s   00:00
+PS C:\Users\NIVEDITAM1\downloads> scp -i key901.pem D:\AWS\main.css ubuntu@18.171.172.64:/home/ubuntu
+main.css                                                                              100%  379     2.4KB/s   00:00
+PS C:\Users\NIVEDITAM1\downloads> ssh -i key901.pem ubuntu@18.171.172.64
+Welcome to Ubuntu 22.04.3 LTS (GNU/Linux 6.2.0-1017-aws x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Thu Jan  4 07:29:16 UTC 2024
+
+  System load:  0.0               Processes:             102
+  Usage of /:   23.3% of 7.57GB   Users logged in:       0
+  Memory usage: 23%               IPv4 address for eth0: 10.0.1.70
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+29 updates can be applied immediately.
+20 of these updates are standard security updates.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Apps to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+
+Last login: Thu Jan  4 07:02:18 2024 from 27.107.114.34
+ubuntu@ip-10-0-1-70:~$ ls
+index.html  main.css
+ubuntu@ip-10-0-1-70:~$ sudo mv * /var/www/html/
+ubuntu@ip-10-0-1-70:~$ exit
+logout
+Connection to 18.171.172.64 closed.
+
+
+s3==LOGICAL CONTAINERS
+
+
+
+
+
+
+
+java
+========
+
+dependency->mvn repository->com.amazonaws-version->copy the dependency
+
+
+simple queue service
+--------------------
+
+create a queue
+
+1)standard
+2)FIFO
+
+Dead-letter queue-->similar to spam in email.
